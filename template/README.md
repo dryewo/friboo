@@ -22,6 +22,24 @@ So far this is a manual step. Docker is required.
 $ ./itest.sh
 ```
 
+## Releasing
+
+Currently Leiningen does not like projects in subfolders, release has to be done manually:
+
+Make sure that there are no uncommitted changes and then execute these steps:
+
+```sh
+$ lein change version leiningen.release/bump-version release :minor
+$ git add project.clj
+$ git commit -m "Template version <RELEASE_VERSION>"
+$ git tag -s "template-<RELEASE_VERSION>" -m "Template version <RELEASE_VERSION>"
+$ lein deploy
+$ lein change version leiningen.release/bump-version :minor
+$ git add project.clj
+$ git commit -m "Template version <SNAPSHOT_VERSION>"
+$ git push
+```
+
 ## License
 
 Copyright © 2016 Zalando SE
