@@ -5,6 +5,10 @@ image_resource:
   source:
     repository: clojure
     tag: alpine
+
+inputs:
+- name: git-repo
+
 run:
   path: sh
   args:
