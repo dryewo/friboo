@@ -6,6 +6,9 @@ image_resource:
     repository: clojure
     tag: alpine
 run:
-  path: lein
+  path: sh
   args:
-  - cloverage
+  - -exc
+  - |
+    cd git-repo
+    lein cloverage
