@@ -16,3 +16,4 @@ run:
   - |
     cd git-repo
     lein cloverage
+#test
