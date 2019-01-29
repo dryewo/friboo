@@ -28,3 +28,27 @@
       (-> (f/parse (f/formatters :date-time) timestamp-string) .getMillis)
       ; fasterxml jackson's ISO8601Utils
       (-> (ISO8601Utils/parse timestamp-string (ParsePosition. 0)) .getTime))))
+
+(deftest test-db-component-lifecycle
+  (let [close-count (atom 0)
+        db-component {:datasource (reify java.io.Closeable
+                                    (close [this]
+                                      (swap! close-count inc)))}
+        stopped-db-component (stop-component db-component)]
+    (is (= 1 @close-count))
+    (stop-component stopped-db-component)
+    (is (= 1 @close-count))))
+
+(deftest test-load-flyway-configuration
+  (let [configuration {:user           "user"
+                       :password       "password"
+                       :flyway.table   "tablename"
+                       :flyway-schemas "schemas"}
+        jdbc-url "jdbc-url"
+        properties (load-flyway-configuration configuration jdbc-url)]
+    (is (= properties {"flyway.password" "password"
+                       "flyway.url"      "jdbc-url"
+                       "flyway.driver"   ""
+                       "flyway.user"     "user"
+                       "flyway.table"    "tablename"
+                       "flyway.schemas"  "schemas"}))))
